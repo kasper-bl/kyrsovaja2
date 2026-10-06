@@ -1,33 +1,25 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
+// Главная (пока заглушка — потом сделаем настоящую)
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
-// Временный маршрут для проверки вёрстки
-Route::get('/test-register', function () {
-    return view('auth.register');
-});
+// Регистрация
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
-// Боевые маршруты — заглушки (сейчас просто возвращают форму)
-Route::get('/register', function () {
-    return view('auth.register');
-})->name('register');
+// Вход
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
-Route::post('/register', function () {
-    return 'Тут будет обработка регистрации';
-})->name('register.post');
+// Выход (только для авторизованных)
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
-
-Route::post('/login', function () {
-    return 'Тут будет обработка входа';
-})->name('login.post');
-
+// Восстановление пароля (пока заглушка)
 Route::get('/forgot-password', function () {
     return 'Тут будет страница восстановления пароля';
 })->name('password.request');

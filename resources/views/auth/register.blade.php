@@ -14,26 +14,26 @@
 
             <div class="registration__form">
                 <label>Имя</label>
-                <input type="text" name="name" placeholder="Введите имя" value="{{ old('name') }}">
                 @error('name')
                     <span class="error">{{ $message }}</span>
                 @enderror
+                <input type="text" name="name" placeholder="Введите имя" value="{{ old('name') }}">
             </div>
 
             <div class="registration__form">
                 <label>Почта</label>
-                <input type="email" name="email" placeholder="Введите почту" value="{{ old('email') }}">
                 @error('email')
                     <span class="error">{{ $message }}</span>
                 @enderror
+                <input type="email" name="email" placeholder="Введите почту" value="{{ old('email') }}">
             </div>
 
             <div class="registration__form">
                 <label>Пароль</label>
-                <input type="password" name="password" placeholder="Введите пароль">
                 @error('password')
                     <span class="error">{{ $message }}</span>
                 @enderror
+                <input type="password" name="password" placeholder="Введите пароль">
             </div>
 
             <button type="submit" class="button">Регистрация</button>
