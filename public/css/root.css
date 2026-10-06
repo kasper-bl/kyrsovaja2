@@ -1,0 +1,16 @@
+:root{
+    --text-white: #fff;
+    --body-color: #02010E;
+    --btn-color: #C52932;
+    --blue-text: #5C7A9D;
+    --dark-blue-color: #1B1A26;
+    --bg-input: #31303B;
+    --bg-cart: #152240;
+    --green: #13C25C;
+    --red-text: #F5313C;
+    --yellow: #CC9933;
+    --grey-text:#969696;
+    --btn-hover: #ad1e25;
+    --cart-hover: #213778;
+    --bg-dark-blue: #14131F;
+}
