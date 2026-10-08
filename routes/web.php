@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Http\Request;
 use App\Http\Requests\PasswordResetRequest;
 use App\Http\Requests\NewPasswordRequest;
+use App\Http\Controllers\ProfileController;
 
 
 // Главная (пока заглушка — потом сделаем настоящую)
@@ -69,3 +70,13 @@ Route::post('/reset-password', function (NewPasswordRequest $request) {
         ? redirect()->route('login')->with('status', 'Пароль успешно изменён! Войдите с новым паролем.')
         : back()->withErrors(['email' => __($status)]);
 })->middleware('guest')->name('password.update');
+
+
+// Просмотр профиля (пока заглушка — сделаем после избранного и подборок)
+Route::get('/profile', function () {
+    return 'Страница профиля (в разработке)';
+})->middleware('auth')->name('profile');
+
+// Редактирование профиля
+Route::get('/profile/edit', [ProfileController::class, 'showEdit'])->middleware('auth')->name('profile.edit');
+Route::post('/profile/edit', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
