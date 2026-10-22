@@ -9,12 +9,10 @@ use Illuminate\Http\Request;
 use App\Http\Requests\PasswordResetRequest;
 use App\Http\Requests\NewPasswordRequest;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\HomeController;
 
 
-// Главная (пока заглушка — потом сделаем настоящую)
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Регистрация
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
