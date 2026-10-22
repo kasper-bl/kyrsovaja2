@@ -140,20 +140,35 @@
                 </div>
             </div>
 
-            {{-- Пагинация (пока статичная) --}}
-            <div class="catalog__pagination">
-                <div class="pagination__item--active">
-                    <p>1</p>
+            {{-- Пагинация --}}
+            @if ($games->hasPages())
+                <div class="catalog__pagination">
+                    {{-- Кнопки с номерами страниц --}}
+                    @for ($i = 1; $i <= $games->lastPage(); $i++)
+                        @if ($i == $games->currentPage())
+                            <div class="pagination__item--active">
+                                <a href="{{ $games->url($i) }}"><p>{{ $i }}</p></a>
+                            </div>
+                        @else
+                            <div class="pagination__item">
+                                <a href="{{ $games->url($i) }}"><p>{{ $i }}</p></a>
+                            </div>
+                        @endif
+                    @endfor
+
+                    {{-- Кнопка "следующая" --}}
+                    @if ($games->hasMorePages())
+                        <a href="{{ $games->nextPageUrl() }}">
+                            <img src="{{ asset('img/icon/next.svg') }}" alt="next">
+                        </a>
+                    @endif
+
+                    {{-- Кнопка "последняя" --}}
+                    <a href="{{ $games->url($games->lastPage()) }}">
+                        <img src="{{ asset('img/icon/end.svg') }}" alt="end">
+                    </a>
                 </div>
-                <div class="pagination__item">
-                    <p>2</p>
-                </div>
-                <div class="pagination__item">
-                    <p>3</p>
-                </div>
-                <img src="{{ asset('img/icon/next.svg') }}" alt="next">
-                <img src="{{ asset('img/icon/end.svg') }}" alt="end">
-            </div>
+            @endif
         </div>
     </section>
 

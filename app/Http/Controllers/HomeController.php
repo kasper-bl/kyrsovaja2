@@ -8,7 +8,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $games = Game::all();
+        $games = Game::paginate(6);
         return view('home', compact('games'));
     }
 }

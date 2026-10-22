@@ -266,6 +266,7 @@ input{
 
 .catalog__inner{
     display: flex;
+    gap: 40px;
     justify-content: space-between;
 }
 
