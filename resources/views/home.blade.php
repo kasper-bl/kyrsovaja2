@@ -117,58 +117,61 @@
                     <a class="button" href="">Применить</a>
                 </div>
 
-                {{-- Сетка игр --}}
-                <div class="catalog__container">
-                    @foreach ($games as $game)
-                        <article class="catalog__cart">
-                            <div class="card__bg-wrapper">
-                                <img src="{{ asset($game->image) }}" alt="{{ $game->title }}" class="card__bg">
-                            </div>
-                            <div class="cart__content">
-                                <h2>{{ $game->title }}</h2>
-                                <p class="cart__difficulty-{{ $game->difficulty }}">Уровень сложности</p>
-                                <div class="cart__progress-bar">
-                                    <div class="cart__progress-{{ $game->difficulty }}"></div>
-                                </div>
-                                <div class="cart__players">
-                                    <img src="{{ asset('img/icon/user_icon.svg') }}" alt="user_icon">
-                                    <p>{{ $game->min_players }} - {{ $game->max_players }}</p>
-                                </div>
-                            </div>
-                        </article>
-                    @endforeach
-                </div>
-            </div>
+                {{-- Контейнер, который будет обновляться через AJAX --}}
+                <div id="catalog-results" style="flex: 1; display: flex; flex-direction: column; gap: 30px;">
 
-            {{-- Пагинация --}}
-            @if ($games->hasPages())
-                <div class="catalog__pagination">
-                    {{-- Кнопки с номерами страниц --}}
-                    @for ($i = 1; $i <= $games->lastPage(); $i++)
-                        @if ($i == $games->currentPage())
-                            <div class="pagination__item--active">
-                                <a href="{{ $games->url($i) }}"><p>{{ $i }}</p></a>
-                            </div>
-                        @else
-                            <div class="pagination__item">
-                                <a href="{{ $games->url($i) }}"><p>{{ $i }}</p></a>
-                            </div>
-                        @endif
-                    @endfor
+                    {{-- Сетка карточек --}}
+                    <div class="catalog__container">
+                        @foreach ($games as $game)
+                            <article class="catalog__cart">
+                                <div class="card__bg-wrapper">
+                                    <img src="{{ asset($game->image) }}" alt="{{ $game->title }}" class="card__bg">
+                                </div>
+                                <div class="cart__content">
+                                    <h2>{{ $game->title }}</h2>
+                                    <p class="cart__difficulty-{{ $game->difficulty }}">Уровень сложности</p>
+                                    <div class="cart__progress-bar">
+                                        <div class="cart__progress-{{ $game->difficulty }}"></div>
+                                    </div>
+                                    <div class="cart__players">
+                                        <img src="{{ asset('img/icon/user_icon.svg') }}" alt="user_icon">
+                                        <p>{{ $game->min_players }} - {{ $game->max_players }}</p>
+                                    </div>
+                                </div>
+                            </article>
+                        @endforeach
+                    </div>
 
-                    {{-- Кнопка "следующая" --}}
-                    @if ($games->hasMorePages())
-                        <a href="{{ $games->nextPageUrl() }}">
-                            <img src="{{ asset('img/icon/next.svg') }}" alt="next">
-                        </a>
+                    {{-- Пагинация --}}
+                    @if ($games->hasPages())
+                        <div class="catalog__pagination">
+                            @for ($i = 1; $i <= $games->lastPage(); $i++)
+                                @if ($i == $games->currentPage())
+                                    <div class="pagination__item--active">
+                                        <a href="{{ $games->url($i) }}"><p>{{ $i }}</p></a>
+                                    </div>
+                                @else
+                                    <div class="pagination__item">
+                                        <a href="{{ $games->url($i) }}"><p>{{ $i }}</p></a>
+                                    </div>
+                                @endif
+                            @endfor
+
+                            @if ($games->hasMorePages())
+                                <a href="{{ $games->nextPageUrl() }}">
+                                    <img src="{{ asset('img/icon/next.svg') }}" alt="next">
+                                </a>
+                            @endif
+
+                            <a href="{{ $games->url($games->lastPage()) }}">
+                                <img src="{{ asset('img/icon/end.svg') }}" alt="end">
+                            </a>
+                        </div>
                     @endif
 
-                    {{-- Кнопка "последняя" --}}
-                    <a href="{{ $games->url($games->lastPage()) }}">
-                        <img src="{{ asset('img/icon/end.svg') }}" alt="end">
-                    </a>
                 </div>
-            @endif
+
+            </div>
         </div>
     </section>
 
@@ -184,4 +187,8 @@
         </div>
     </section>
 
+@endsection
+
+@section('scripts')
+    <script src="{{ asset('js/pagination.js') }}"></script>
 @endsection

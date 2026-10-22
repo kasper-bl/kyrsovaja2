@@ -56,5 +56,7 @@
             <p> &copy; Gamegrad 2025 &reg; - Ваш гид в мире игр</p>
         </div>
     </footer>
+    
+    @yield('scripts')
 </body>
 </html>
