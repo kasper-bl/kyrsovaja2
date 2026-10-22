@@ -80,3 +80,8 @@ Route::get('/profile', function () {
 // Редактирование профиля
 Route::get('/profile/edit', [ProfileController::class, 'showEdit'])->middleware('auth')->name('profile.edit');
 Route::post('/profile/edit', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
+
+Route::get('/test-games', function () {
+    $games = \App\Models\Game::with('categories')->get();
+    return response()->json($games);
+});
