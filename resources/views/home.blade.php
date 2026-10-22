@@ -24,9 +24,9 @@
             {{-- Поиск и сортировка (пока без логики) --}}
             <div class="catalog__search-container">
                 <div class="catalog__searth-backgroung">
-                    <form class="catalog__search">
-                        <input type="text" placeholder="Введите название игры...">
-                        <button class="catalog__button button">Найти игру</button>
+                    <form class="catalog__search" id="search-form" method="GET" action="{{ route('home') }}">
+                        <input type="text" name="search" placeholder="Введите название игры..." value="{{ request('search') }}">
+                        <button type="submit" class="catalog__button button">Найти игру</button>
                     </form>
                 </div>
                 <div class="catalog__sort">
