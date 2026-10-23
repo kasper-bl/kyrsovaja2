@@ -50,8 +50,6 @@ input{
     font-weight: bold;
 }
 
-
-/*HEADER*/
 .header{
     width: 90%;
     display: flex;
@@ -113,9 +111,6 @@ input{
 }
 
 
-
-/*MAIN BANNER*/
-
 .main-banner, .about-us{
     margin: 0 auto;
     background: radial-gradient(circle 200px at left 60%, #004ca25e, transparent 100%),
@@ -156,7 +151,7 @@ input{
     max-width: 90%;
 }
 
-/*CATALOG*/
+
 
 .catalog{
     width: 90%;
@@ -292,11 +287,44 @@ input{
     justify-content: space-between;
 }
 
+
 .catalog__filters > a{
     width: 50%;
     text-align: center;
     margin: 0 auto;
 }
+
+/* Кастомные фильтры */
+.filter-item {
+    display: block;
+    cursor: pointer;
+    color: var(--grey-text);
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+    user-select: none;
+}
+
+.filter-item input {
+    display: none; /* скрываем стандартный чекбокс/радио */
+}
+
+.filter-item input:checked + span {
+    color: var(--text-white);
+    font-weight: 500;
+}
+
+.filter-item:hover span {
+    color: var(--text-white);
+}
+
+/* Возраст — сеткой 3 колонки */
+.filters__age {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    padding-left: 1vw;
+}
+
 .filters__age{
     display: grid;
     padding-left: 1vw;

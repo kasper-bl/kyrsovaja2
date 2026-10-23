@@ -21,7 +21,7 @@
     <section class="catalog wrapper" id="catalog">
         <div class="catalog__search-inner">
 
-            {{-- Поиск и сортировка (пока без логики) --}}
+            {{-- Поиск и сортировка --}}
             <div class="catalog__search-container">
                 <div class="catalog__searth-backgroung">
                     <form class="catalog__search" id="search-form" method="GET" action="{{ route('home') }}">
@@ -32,14 +32,23 @@
                 <div class="catalog__sort">
                     <div class="sort__list">
                         <div class="sort__title">
-                            <p>Сортировка: Название</p>
+                            @php
+                                $sortLabels = [
+                                    'difficulty' => 'Сложность',
+                                    'duration' => 'Время игры',
+                                    'age' => 'Возраст',
+                                    'title' => 'Название',
+                                ];
+                                $currentSort = request('sort', 'title');
+                            @endphp
+                            <p>Сортировка: {{ $sortLabels[$currentSort] ?? 'Название' }}</p>
                             <img src="{{ asset('img/icon/arrow_sort.svg') }}" alt="arrow">
                         </div>
                         <div class="sort__options">
-                            <p>Сложность</p>
-                            <p>Время игры</p>
-                            <p>Возраст</p>
-                            <p>Название</p>
+                            <p data-sort="difficulty">Сложность</p>
+                            <p data-sort="duration">Время игры</p>
+                            <p data-sort="age">Возраст</p>
+                            <p data-sort="title">Название</p>
                         </div>
                     </div>
                 </div>
@@ -49,72 +58,72 @@
 
                 {{-- Фильтры (пока без логики) --}}
                 <div class="catalog__filters">
-                    <div class="filters__content">
+                    <form id="filter-form" class="filters__content">
+
+                        {{-- Тип --}}
                         <h3>Тип</h3>
-                        <div class="filters__category">
-                            <p>Стратегия</p>
-                            <p>(10)</p>
-                        </div>
-                        <div class="filters__category">
-                            <p>Экономические</p>
-                            <p>(15)</p>
-                        </div>
-                        <div class="filters__category">
-                            <p>Коммуникативные</p>
-                            <p>(19)</p>
-                        </div>
-                        <div class="filters__category">
-                            <p>Логические</p>
-                            <p>(5)</p>
-                        </div>
-                        <div class="filters__category">
-                            <p>Ролевые</p>
-                            <p>(13)</p>
-                        </div>
-                        <div class="filters__category">
-                            <p>Викторины</p>
-                            <p>(7)</p>
-                        </div>
-                        <div class="filters__category">
-                            <p>Словесные</p>
-                            <p>(18)</p>
-                        </div>
+                        @foreach ($categories as $category)
+                            <div class="filters__category">
+                                <label class="filter-item">
+                                    <input type="checkbox" name="categories[]" value="{{ $category->id }}"
+                                        @if (in_array($category->id, (array) request('categories', []))) checked @endif>
+                                    <span>{{ $category->name }}</span>
+                                </label>
+                            </div>
+                        @endforeach
+
+                        {{-- Кол-во игроков (слайдер) --}}
                         <h3>Кол-во игроков</h3>
                         <div class="catalog__slider">
                             <div class="slider__container">
-                                <div class="slider__track"></div>
-                                <div class="slider__handle slider__handle-left"></div>
-                                <div class="slider__handle slider__handle-right"></div>
+                                <div class="slider__track" id="slider-track"></div>
+                                <div class="slider__handle slider__handle-left" id="slider-left"></div>
+                                <div class="slider__handle slider__handle-right" id="slider-right"></div>
                             </div>
-                            <p>Игроки: <span>2-6</span></p>
+                            <p>Игроки: <span id="slider-label">2-6</span></p>
+                            <input type="hidden" name="players_min" id="players-min" value="{{ request('players_min', 2) }}">
+                            <input type="hidden" name="players_max" id="players-max" value="{{ request('players_max', 6) }}">
                         </div>
 
+                        {{-- Возраст --}}
                         <h3>Возраст</h3>
                         <div class="filters__age">
-                            <p>3+</p>
-                            <p>10+</p>
-                            <p>16+</p>
-                            <p>6+</p>
-                            <p>14+</p>
-                            <p>18+</p>
+                            @foreach ([3, 6, 10, 14, 16, 18] as $age)
+                                <label class="filter-item">
+                                    <input type="radio" name="age" value="{{ $age }}"
+                                        @if (request('age') == $age) checked @endif>
+                                    <span>{{ $age }}+</span>
+                                </label>
+                            @endforeach
                         </div>
+
+                        {{-- Сложность --}}
                         <h3>Сложность</h3>
                         <div class="filters__complexity">
                             <div>
-                                <p>Лёгкие</p>
-                                <p>(13)</p>
+                                <label class="filter-item">
+                                    <input type="checkbox" name="difficulty[]" value="easy"
+                                        @if (in_array('easy', (array) request('difficulty', []))) checked @endif>
+                                    <span>Лёгкие</span>
+                                </label>
                             </div>
                             <div>
-                                <p>Средние</p>
-                                <p>(7)</p>
+                                <label class="filter-item">
+                                    <input type="checkbox" name="difficulty[]" value="normal"
+                                        @if (in_array('normal', (array) request('difficulty', []))) checked @endif>
+                                    <span>Средние</span>
+                                </label>
                             </div>
                             <div>
-                                <p>Сложные</p>
-                                <p>(18)</p>
+                                <label class="filter-item">
+                                    <input type="checkbox" name="difficulty[]" value="hard"
+                                        @if (in_array('hard', (array) request('difficulty', []))) checked @endif>
+                                    <span>Сложные</span>
+                                </label>
                             </div>
                         </div>
-                    </div>
-                    <a class="button" href="">Применить</a>
+                    </form>
+                    <a class="button" id="apply-filters" href="#">Применить</a>
                 </div>
 
                 {{-- Контейнер, который будет обновляться через AJAX --}}
