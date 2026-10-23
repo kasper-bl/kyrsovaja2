@@ -132,22 +132,24 @@
                     {{-- Сетка карточек --}}
                     <div class="catalog__container">
                         @foreach ($games as $game)
-                            <article class="catalog__cart">
-                                <div class="card__bg-wrapper">
-                                    <img src="{{ asset($game->image) }}" alt="{{ $game->title }}" class="card__bg">
-                                </div>
-                                <div class="cart__content">
-                                    <h2>{{ $game->title }}</h2>
-                                    <p class="cart__difficulty-{{ $game->difficulty }}">Уровень сложности</p>
-                                    <div class="cart__progress-bar">
-                                        <div class="cart__progress-{{ $game->difficulty }}"></div>
+                            <a href="{{ route('game.show', $game->id) }}">
+                                <article class="catalog__cart">
+                                    <div class="card__bg-wrapper">
+                                        <img src="{{ asset($game->image) }}" alt="{{ $game->title }}" class="card__bg">
                                     </div>
-                                    <div class="cart__players">
-                                        <img src="{{ asset('img/icon/user_icon.svg') }}" alt="user_icon">
-                                        <p>{{ $game->min_players }} - {{ $game->max_players }}</p>
+                                    <div class="cart__content">
+                                        <h2>{{ $game->title }}</h2>
+                                        <p class="cart__difficulty-{{ $game->difficulty }}">Уровень сложности</p>
+                                        <div class="cart__progress-bar">
+                                            <div class="cart__progress-{{ $game->difficulty }}"></div>
+                                        </div>
+                                        <div class="cart__players">
+                                            <img src="{{ asset('img/icon/user_icon.svg') }}" alt="user_icon">
+                                            <p>{{ $game->min_players }} - {{ $game->max_players }}</p>
+                                        </div>
                                     </div>
-                                </div>
-                            </article>
+                                </article>
+                            </a>
                         @endforeach
                     </div>
 

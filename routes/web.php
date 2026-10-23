@@ -10,6 +10,7 @@ use App\Http\Requests\PasswordResetRequest;
 use App\Http\Requests\NewPasswordRequest;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\GameController;
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -25,11 +26,7 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 // Выход (только для авторизованных)
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-// Восстановление пароля (пока заглушка)
-Route::get('/forgot-password', function () {
-    return 'Тут будет страница восстановления пароля';
-})->name('password.request');
-
+Route::get('/game/{id}', [GameController::class, 'show'])->name('game.show');
 // Форма «Забыли пароль» (GET)
 Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
