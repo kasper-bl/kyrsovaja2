@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     });
 
-    // --- AJAX-поиск ---
     const searchForm = document.getElementById('search-form');
     if (searchForm) {
         searchForm.addEventListener('submit', function (e) {
