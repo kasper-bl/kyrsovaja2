@@ -6,8 +6,20 @@ use App\Http\Requests\UpdateProfileRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
+
+
 class ProfileController extends Controller
 {
+
+    // Показать профиль пользователя
+    public function index()
+    {
+        $user = Auth::user();
+        $favorites = $user->favorites()->paginate(4);
+        return view('profile.index', compact('user', 'favorites'));
+    }
+
+
     // Показать форму редактирования профиля
     public function showEdit()
     {

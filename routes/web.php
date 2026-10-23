@@ -69,10 +69,7 @@ Route::post('/reset-password', function (NewPasswordRequest $request) {
 })->middleware('guest')->name('password.update');
 
 
-// Просмотр профиля (пока заглушка — сделаем после избранного и подборок)
-Route::get('/profile', function () {
-    return 'Страница профиля (в разработке)';
-})->middleware('auth')->name('profile');
+Route::get('/profile', [ProfileController::class, 'index'])->middleware('auth')->name('profile');
 
 // Редактирование профиля
 Route::get('/profile/edit', [ProfileController::class, 'showEdit'])->middleware('auth')->name('profile.edit');

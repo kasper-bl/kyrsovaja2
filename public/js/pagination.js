@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    // --- AJAX-пагинация ---
+    // --- пагинация ---
     document.addEventListener('click', function (e) {
         const link = e.target.closest('.catalog__pagination a');
         if (!link) return;
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // --- AJAX-сортировка ---
+    // --сортировка ---
     document.addEventListener('click', function (e) {
         const sortOption = e.target.closest('.sort__options p');
         if (!sortOption) return;
@@ -163,7 +163,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const formData = new FormData(filterForm);
             const params = new URLSearchParams();
 
-            // Массив categories[]
             for (const [key, value] of formData.entries()) {
                 if (value !== '') {
                     params.append(key, value);
@@ -193,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-        // --- AJAX-избранное ---
+        // ---избранное ---
     document.addEventListener('click', function (e) {
         const icon = e.target.closest('.favorite-icon');
         if (!icon) return;
@@ -221,6 +220,35 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(error => {
             console.error('Ошибка избранного:', error);
+        });
+    });
+
+    document.addEventListener('click', function (e) {
+        const removeIcon = e.target.closest('.remove-favorite');
+        if (!removeIcon) return;
+
+        e.preventDefault();
+        const gameId = removeIcon.getAttribute('data-game-id');
+        const card = removeIcon.closest('.catalog__cart');
+
+        fetch('/favorite/toggle/' + gameId, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'removed' && card) {
+                card.style.transition = 'opacity 0.3s, transform 0.3s';
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.9)';
+                setTimeout(() => card.remove(), 300);
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка удаления из избранного:', error);
         });
     });
 

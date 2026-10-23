@@ -23,7 +23,7 @@
             </nav>
             <div class="header__button">
                 @auth
-                    <a href="{{ route('profile.edit') }}" class="button">Профиль</a>
+                    <a href="{{ route('profile') }}" class="button">Профиль</a>
                     <form method="POST" action="{{ route('logout') }}" style="display:inline;">
                         @csrf
                         <button type="submit" class="button">Выход</button>
