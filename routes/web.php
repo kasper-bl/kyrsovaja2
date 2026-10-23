@@ -11,6 +11,8 @@ use App\Http\Requests\NewPasswordRequest;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\FavoriteController;
+
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -80,3 +82,7 @@ Route::get('/test-games', function () {
     $games = \App\Models\Game::with('categories')->get();
     return response()->json($games);
 });
+
+Route::post('/favorite/toggle/{gameId}', [FavoriteController::class, 'toggle'])
+    ->middleware('auth')
+    ->name('favorite.toggle');

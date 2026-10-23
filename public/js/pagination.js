@@ -193,4 +193,35 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+        // --- AJAX-избранное ---
+    document.addEventListener('click', function (e) {
+        const icon = e.target.closest('.favorite-icon');
+        if (!icon) return;
+
+        e.preventDefault();
+        const gameId = icon.getAttribute('data-game-id');
+        const url = '/favorite/toggle/' + gameId;
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'added') {
+                icon.classList.add('favorite-icon--active');
+                icon.setAttribute('title', 'Убрать из избранного');
+            } else {
+                icon.classList.remove('favorite-icon--active');
+                icon.setAttribute('title', 'Добавить в избранное');
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка избранного:', error);
+        });
+    });
+
 });

@@ -209,13 +209,27 @@ input{
   z-index: 1;
 }
 
-.game-cart__image-wrapper::after {
-  right: 64px; 
-  background-image: url('/img/icon/favorit.svg'); 
-  cursor: pointer;
+.favorite-icon {
+    position: absolute;
+    right: 64px;
+    bottom: 0;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    z-index: 3;
+    opacity: 0.7;
+    transition: opacity 0.3s ease, transform 0.2s ease;
 }
 
+.favorite-icon:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
 
+.favorite-icon--active {
+    opacity: 1;
+    filter: drop-shadow(0 0 5px var(--btn-color));
+}
 
 /*FOOTER*/
 /*FOOTER*/

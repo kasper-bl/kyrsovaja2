@@ -25,4 +25,10 @@ class Game extends Model
     {
         return $this->belongsToMany(Category::class);
     }
+    
+    // Пользователи, добавившие игру в избранное
+    public function favoritedBy()
+    {
+        return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
+    }
 }

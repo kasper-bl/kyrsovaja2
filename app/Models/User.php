@@ -48,4 +48,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // Избранные игры
+    public function favorites()
+    {
+        return $this->belongsToMany(Game::class, 'favorites')->withTimestamps();
+    }
 }

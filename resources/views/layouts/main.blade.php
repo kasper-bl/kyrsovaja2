@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{ asset('css/root.css') }}">
     <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @yield('styles')
     <title>@yield('title', 'GameGrad')</title>
 </head>

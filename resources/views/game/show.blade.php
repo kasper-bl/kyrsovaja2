@@ -46,10 +46,27 @@
 
         <div class="game-cart__image-wrapper">
             <img src="{{ asset($game->image) }}" alt="{{ $game->title }}">
+
+            @auth
+                @php
+                    $isFavorite = auth()->user()->favorites->contains($game->id);
+                @endphp
+                <img 
+                    src="{{ asset('img/icon/favorit.svg') }}" 
+                    alt="В избранное"
+                    class="favorite-icon {{ $isFavorite ? 'favorite-icon--active' : '' }}"
+                    data-game-id="{{ $game->id }}"
+                    title="{{ $isFavorite ? 'Убрать из избранного' : 'Добавить в избранное' }}"
+                >
+            @endauth
         </div>
     </section>
 @endsection
 
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/gamePage.css') }}">
+@endsection
+
+@section('scripts')
+    <script src="{{ asset('js/pagination.js') }}"></script>
 @endsection
