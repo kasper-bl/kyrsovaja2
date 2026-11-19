@@ -43,10 +43,24 @@
     <footer id="footer" class="footer wrapper">
         <div class="footer__form">
             <img src="{{ asset('img/icon/logo.svg') }}" alt="logo">
-            <form>
-                <input type="text" placeholder="Предложите свою игру">
-                <button class="button">Отправить</button>
+            
+            <!-- НАЧАЛО ИСПРАВЛЕННОЙ ФОРМЫ -->
+            @if(session('suggestion_success'))
+                <div style="color: #4CAF50; margin-bottom: 10px; font-weight: bold;">
+                    {{ session('suggestion_success') }}
+                </div>
+            @endif
+
+            <form action="{{ route('suggestion.store') }}" method="POST">
+                @csrf
+                <input type="text" name="title" placeholder="Предложите свою игру" value="{{ old('title') }}" required>
+                <button type="submit" class="button">Отправить</button>
             </form>
+            @error('title')
+                <div style="color: #ff4d4d; font-size: 14px; margin-top: 5px;">{{ $message }}</div>
+            @enderror
+            <!-- КОНЕЦ ИСПРАВЛЕННОЙ ФОРМЫ -->
+
         </div>
         <div class="footer__soc-networks">
             <div class="footer__img">

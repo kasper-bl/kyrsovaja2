@@ -12,7 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\FavoriteController;
-
+use App\Http\Controllers\SuggestionController;
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -85,3 +85,11 @@ Route::post('/favorite/toggle/{gameId}', [FavoriteController::class, 'toggle'])
     ->middleware('auth')
     ->name('favorite.toggle');
 
+// Публичная форма
+Route::post('/suggestion', [SuggestionController::class, 'store'])->name('suggestion.store');
+
+// Админка (только для админа)
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/suggestions', [SuggestionController::class, 'index'])->name('admin.suggestions');
+    Route::delete('/suggestions/{suggestion}', [SuggestionController::class, 'destroy'])->name('admin.suggestions.destroy');
+});
