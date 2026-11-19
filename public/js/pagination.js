@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-
-    // --- пагинация ---
     document.addEventListener('click', function (e) {
         const link = e.target.closest('.catalog__pagination a');
         if (!link) return;
@@ -251,5 +249,26 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Ошибка удаления из избранного:', error);
         });
     });
+
+    const randomBtn = document.getElementById('random-game-btn');
+    if (randomBtn) {
+        randomBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            fetch('/game/random')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.id) {
+                        window.location.href = '/game/' + data.id;
+                    } else {
+                        alert('Игр пока нет в базе');
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка случайной игры:', error);
+                    alert('Не удалось загрузить случайную игру');
+                });
+        });
+    }
 
 });

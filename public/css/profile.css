@@ -27,14 +27,12 @@ input{
     max-width: 1440px;
 }
 
-/* Контейнер результатов для AJAX */
 .catalog-results {
     display: flex;
     flex-direction: column;
     gap: 30px;
 }
 
-/* Сообщение, если нет избранных игр */
 .empty-favorites {
     color: var(--grey-text);
     font-size: 1.1rem;

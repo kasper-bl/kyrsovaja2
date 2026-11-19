@@ -11,7 +11,7 @@
                 <p class="blue-text">Мир в коробке</p>
                 <h2>НАСТОЛЬНЫЕ ИГРЫ ДЛЯ ВАШЕЙ КОМПАНИИ</h2>
                 <p>Собирайте друзей, раскрывайте коробки и погружайтесь в мир незабываемых приключений, стратегических баталий и веселья, которое объединяет.</p>
-                <a href="#catalog" class="button">Подобрать игру</a>
+                <button type="button" id="random-game-btn" class="button">Случайная игра</button>
             </div>
             <img src="{{ asset('img/banners/main-banner.png') }}" alt="cubs">
         </div>

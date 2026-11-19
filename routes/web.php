@@ -28,6 +28,7 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 // Выход (только для авторизованных)
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
+Route::get('/game/random', [GameController::class, 'random'])->name('game.random');
 Route::get('/game/{id}', [GameController::class, 'show'])->name('game.show');
 // Форма «Забыли пароль» (GET)
 Route::get('/forgot-password', function () {
@@ -83,3 +84,4 @@ Route::get('/test-games', function () {
 Route::post('/favorite/toggle/{gameId}', [FavoriteController::class, 'toggle'])
     ->middleware('auth')
     ->name('favorite.toggle');
+
