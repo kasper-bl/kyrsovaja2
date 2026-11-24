@@ -222,6 +222,37 @@ if (applyButton && filterForm) {
     });
 }
 
+const resetButton = document.getElementById('reset-filters');
+if (resetButton) {
+    resetButton.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        // 1. Сбрасываем все чекбоксы и радио в форме
+        if (filterForm) {
+            filterForm.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(function (input) {
+                input.checked = false;
+            });
+        }
+
+        // 2. Сбрасываем слайдер к дефолтным значениям
+        if (typeof window.syncSliderWithUrl === 'function') {
+            // Временно меняем URL на чистый, чтобы syncSliderWithUrl взял дефолты
+            const cleanUrl = window.location.pathname;
+            history.pushState({}, '', cleanUrl);
+            window.syncSliderWithUrl();
+        }
+
+        // 3. Очищаем поле поиска, если есть
+        const searchInput = document.querySelector('#search-form input[name="search"]');
+        if (searchInput) {
+            searchInput.value = '';
+        }
+
+        // 4. Загружаем каталог без фильтров
+        loadCatalog(window.location.pathname, window.scrollY);
+    });
+}
+
 // =========================================================================
 // 6. ИЗБРАННОЕ — ОДИН делегат вместо двух
 // =========================================================================

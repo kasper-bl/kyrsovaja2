@@ -37,10 +37,7 @@ class GameService
             $query->where('min_age', '<=', (int) $filters['age']);
         }
 
-        // Фильтр по количеству игроков — ЛОГИКА ВКЛЮЧЕНИЯ
-        // Игра показывается только если её диапазон игроков ПОЛНОСТЬЮ 
-        // находится внутри выбранного пользователем диапазона [players_min, players_max].
-        // То есть min_players >= players_min И max_players <= players_max
+
         if (!empty($filters['players_min']) && !empty($filters['players_max'])) {
             $min = (int) $filters['players_min'];
             $max = (int) $filters['players_max'];

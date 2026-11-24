@@ -41,13 +41,6 @@
     </main>
 
     <footer id="footer" class="footer wrapper">
-        <div class="footer__form">
-            <img src="{{ asset('img/icon/logo.svg') }}" alt="logo">
-            <form>
-                <input type="text" placeholder="Предложите свою игру">
-                <button class="button">Отправить</button>
-            </form>
-        </div>
         <div class="footer__soc-networks">
             <div class="footer__img">
                 <a href="/"><img src="{{ asset('img/social-network/email.svg') }}" alt="email"></a>

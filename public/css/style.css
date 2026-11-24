@@ -28,6 +28,10 @@ input{
     max-width: 1440px;
 }
 
+button{
+    border: none;
+}
+
 .button {
     cursor: pointer;
     padding: 10px 22px;

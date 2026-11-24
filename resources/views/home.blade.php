@@ -124,6 +124,7 @@
                         </div>
                     </form>
                     <a class="button" id="apply-filters" href="#">Применить</a>
+                    <a class="button button--secondary" id="reset-filters" href="#">Сбросить фильтры</a>
                 </div>
 
                 {{-- Контейнер, который будет обновляться через AJAX --}}
