@@ -3,59 +3,42 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateProfileRequest;
+use App\Services\UserService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-
-
+use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+    public function __construct(
+        private readonly UserService $userService
+    ) {}
 
-    // Показать профиль пользователя
-    public function index()
+    public function index(): View
     {
-        $user = Auth::user();
-        $favorites = $user->favorites()->paginate(4);
-        return view('profile.index', compact('user', 'favorites'));
+        $data = $this->userService->getProfileData(Auth::user());
+        
+        return view('profile.index', $data);
     }
 
-
-    // Показать форму редактирования профиля
-    public function showEdit()
+    public function showEdit(): View
     {
-        $user = Auth::user();
-        return view('profile.edit', compact('user'));
+        return view('profile.edit', [
+            'user' => Auth::user()
+        ]);
     }
 
-    // Сохранить изменения
-    public function update(UpdateProfileRequest $request)
+    public function update(UpdateProfileRequest $request): RedirectResponse
     {
         $user = Auth::user();
 
-        // Обновляем имя и описание
-        $user->name = $request->name;
-        $user->description = $request->description;
+        $this->userService->updateProfile(
+            $user,
+            $request->only(['name', 'description']),
+            $request->file('avatar')
+        );
 
-        // Если загружен новый аватар — сохраняем
-        if ($request->hasFile('avatar')) {
-            // Удаляем старый файл, если он есть
-            if ($user->avatar && file_exists(public_path($user->avatar))) {
-                unlink(public_path($user->avatar));
-            }
-
-            // Генерируем уникальное имя файла
-            $file = $request->file('avatar');
-            $filename = time() . '_' . $file->getClientOriginalName();
-
-            // Сохраняем файл в public/uploads/avatars/
-            $file->move(public_path('uploads/avatars'), $filename);
-
-            // Записываем путь в БД (относительно public/)
-            $user->avatar = 'uploads/avatars/' . $filename;
-        }
-
-        $user->save();
-
-        return redirect()->route('profile.edit')->with('status', 'Профиль успешно сохранён!');
+        return redirect()->route('profile.edit')
+            ->with('status', 'Профиль успешно сохранён!');
     }
 }
