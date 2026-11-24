@@ -2,29 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Favorite;
-use Illuminate\Support\Facades\Auth;
+use App\Services\FavoriteService;
+use Illuminate\Http\JsonResponse;
 
 class FavoriteController extends Controller
 {
-    public function toggle($gameId)
+    public function __construct(
+        private readonly FavoriteService $favoriteService
+    ) {}
+
+    public function toggle($gameId): JsonResponse
     {
-        $userId = Auth::id();
-
-        $existing = Favorite::where('user_id', $userId)
-            ->where('game_id', $gameId)
-            ->first();
-
-        if ($existing) {
-            $existing->delete();
-            $status = 'removed';
-        } else {
-            Favorite::create([
-                'user_id' => $userId,
-                'game_id' => $gameId,
-            ]);
-            $status = 'added';
-        }
+        $status = $this->favoriteService->toggle((int) $gameId);
 
         return response()->json(['status' => $status]);
     }
