@@ -1,87 +1,47 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Http\Request;
-use App\Http\Requests\PasswordResetRequest;
-use App\Http\Requests\NewPasswordRequest;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\GameController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\GameController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
 
-
-
+// Главная страница
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Регистрация
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'register'])->name('register.post');
-
-// Вход
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-
-// Выход (только для авторизованных)
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
-
+// Публичные маршруты игр
 Route::get('/game/random', [GameController::class, 'random'])->name('game.random');
 Route::get('/game/{id}', [GameController::class, 'show'])->name('game.show');
-// Форма «Забыли пароль» (GET)
-Route::get('/forgot-password', function () {
-    return view('auth.forgot-password');
-})->middleware('guest')->name('password.request');
-
-// Отправка ссылки на почту (POST)
-Route::post('/forgot-password', function (PasswordResetRequest $request) {
-    $status = Password::sendResetLink(
-        $request->only('email')
-    );
-
-    return $status === Password::ResetLinkSent
-        ? back()->with(['status' => 'Ссылка для сброса пароля отправлена на вашу почту.'])
-        : back()->withErrors(['email' => __($status)]);
-})->middleware('guest')->name('password.email');
-
-// Форма ввода нового пароля (GET) — сюда пользователь попадает по ссылке из письма
-Route::get('/reset-password/{token}', function (string $token) {
-    return view('auth.new-password', ['token' => $token]);
-})->middleware('guest')->name('password.reset');
-
-// Сохранение нового пароля (POST)
-Route::post('/reset-password', function (NewPasswordRequest $request) {
-    $status = Password::reset(
-        $request->only('email', 'password', 'password_confirmation', 'token'),
-        function ($user, $password) {
-            $user->forceFill([
-                'password' => Hash::make($password)
-            ])->setRememberToken(Str::random(60));
-
-            $user->save();
-        }
-    );
-
-    return $status === Password::PasswordReset
-        ? redirect()->route('login')->with('status', 'Пароль успешно изменён! Войдите с новым паролем.')
-        : back()->withErrors(['email' => __($status)]);
-})->middleware('guest')->name('password.update');
 
 
-Route::get('/profile', [ProfileController::class, 'index'])->middleware('auth')->name('profile');
+Route::middleware('guest')->group(function () {
 
-// Редактирование профиля
-Route::get('/profile/edit', [ProfileController::class, 'showEdit'])->middleware('auth')->name('profile.edit');
-Route::post('/profile/edit', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
-Route::get('/test-games', function () {
-    $games = \App\Models\Game::with('categories')->get();
-    return response()->json($games);
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+
+
+    Route::get('/forgot-password', [PasswordResetController::class, 'showForgotPassword'])->name('password.request');
+    Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'])->name('password.email');
+
+    Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetPassword'])->name('password.reset');
+    Route::post('/reset-password', [PasswordResetController::class, 'updatePassword'])->name('password.update');
 });
 
-Route::post('/favorite/toggle/{gameId}', [FavoriteController::class, 'toggle'])
-    ->middleware('auth')
-    ->name('favorite.toggle');
+
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    // Профиль
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/profile/edit', [ProfileController::class, 'showEdit'])->name('profile.edit');
+    Route::post('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
+
+    // Избранное
+    Route::post('/favorite/toggle/{gameId}', [FavoriteController::class, 'toggle'])->name('favorite.toggle');
+});
 
