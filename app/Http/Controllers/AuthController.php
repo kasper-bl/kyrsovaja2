@@ -4,56 +4,56 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use App\Services\AuthService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class AuthController extends Controller
 {
-    public function showRegister()
+    public function __construct(
+        private readonly AuthService $authService
+    ) {}
+
+    public function showRegister(): View
     {
         return view('auth.register');
     }
 
-    public function register(RegisterRequest $request)
+    public function register(RegisterRequest $request): RedirectResponse
     {
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'user',
-        ]);
+        $user = $this->authService->register(
+            $request->name,
+            $request->email,
+            $request->password
+        );
 
-        Auth::login($user);
+        auth()->login($user);
 
         return redirect()->route('home');
     }
 
-    public function showLogin()
+    public function showLogin(): View
     {
         return view('auth.login');
     }
 
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): RedirectResponse
     {
         $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
+        if ($this->authService->attemptLogin($credentials['email'], $credentials['password'])) {
             $request->session()->regenerate();
             return redirect()->route('home');
         }
 
-        return back()->withErrors([
-            'email' => 'Неверная почта или пароль.',
-        ])->onlyInput('email');
+        return back()
+            ->withErrors(['email' => 'Неверная почта или пароль.'])
+            ->onlyInput('email');
     }
 
-    public function logout(Request $request)
+    public function logout(): RedirectResponse
     {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        $this->authService->logout();
 
         return redirect()->route('home');
     }
