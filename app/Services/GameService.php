@@ -37,17 +37,18 @@ class GameService
             $query->where('min_age', '<=', (int) $filters['age']);
         }
 
-        // Фильтр по количеству игроков (пересечение диапазонов)
+        // Фильтр по количеству игроков — ЛОГИКА ВКЛЮЧЕНИЯ
+        // Игра показывается только если её диапазон игроков ПОЛНОСТЬЮ 
+        // находится внутри выбранного пользователем диапазона [players_min, players_max].
+        // То есть min_players >= players_min И max_players <= players_max
         if (!empty($filters['players_min']) && !empty($filters['players_max'])) {
             $min = (int) $filters['players_min'];
             $max = (int) $filters['players_max'];
-            $query->where(function ($q) use ($min, $max) {
-                $q->where('min_players', '<=', $max)
-                  ->where('max_players', '>=', $min);
-            });
-        }
 
-        // Сортировка (используем match для чистоты кода PHP 8+)
+            $query->where('min_players', '>=', $min)
+                ->where('max_players', '<=', $max);
+        }
+        // Сортировка
         $sort = $filters['sort'] ?? 'title';
         match ($sort) {
             'difficulty' => $query->orderByRaw("FIELD(difficulty, 'easy', 'normal', 'hard')"),
@@ -68,7 +69,7 @@ class GameService
     }
 
     /**
-     * Получить игру по ID с категориями (из предыдущего ревью).
+     * Получить игру по ID с категориями.
      */
     public function show(int $id): Game
     {
@@ -76,7 +77,7 @@ class GameService
     }
 
     /**
-     * Получить случайную игру (из предыдущего ревью).
+     * Получить случайную игру.
      */
     public function random(): ?Game
     {
