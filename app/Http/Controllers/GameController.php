@@ -2,19 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Game;
+use App\Services\GameService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 
 class GameController extends Controller
 {
-    public function show($id)
+    public function __construct(
+        private readonly GameService $gameService
+    ) {}
+
+    public function show($id): View
     {
-        $game = Game::with('categories')->findOrFail($id);
+        $game = $this->gameService->show((int) $id);
+
         return view('game.show', compact('game'));
     }
 
-    public function random()
+    public function random(): JsonResponse
     {
-        $game = Game::inRandomOrder()->first();
+        $game = $this->gameService->random();
 
         if (!$game) {
             return response()->json(['error' => 'Игр пока нет'], 404);

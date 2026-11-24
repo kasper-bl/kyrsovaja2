@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthService
 {
-
+    /**
+     * Регистрация нового пользователя.
+     */
     public function register(string $name, string $email, string $password, string $role = 'user'): User
     {
         return User::create([
@@ -19,6 +21,11 @@ class AuthService
         ]);
     }
 
+    /**
+     * Попытка аутентификации пользователя.
+     *
+     * @return bool true — если вход успешен
+     */
     public function attemptLogin(string $email, string $password): bool
     {
         return Auth::attempt([
@@ -27,6 +34,9 @@ class AuthService
         ]);
     }
 
+    /**
+     * Выход пользователя + очистка сессии.
+     */
     public function logout(): void
     {
         Auth::logout();
